@@ -8,20 +8,14 @@ export default async function handler(request, response) {
   ];
 
   try {
-    // 1. 從 Redis (KV) 獲取目前的計數
-    let currentIndex = await kv.get('url_index');
-    if (currentIndex === null) {
-        currentIndex = 0;
-    } else {
-        currentIndex = parseInt(currentIndex);
-    }
+    // 3. 更新計數 (原子操作) - 直接取回新的號碼，確保不會重複
+    // INCR 會直接回傳加 1 後的結果 (1, 2, 3...)
+    const newCount = await kv.incr('url_index');
 
     // 2. 決定這次的網址
-    const targetUrl = urls[currentIndex % urls.length];
-
-    // 3. 更新計數 (原子操作)
-    // INCR 指令保證就算多人同時點擊，也會依序 +1，不會重複
-    await kv.incr('url_index');
+    // newCount - 1 是為了讓第一次 (1) 對應到陣列索引 0
+    const currentIndex = (newCount - 1) % urls.length;
+    const targetUrl = urls[currentIndex];
 
     // 4. 回傳目標網址 (JSON 格式)
     return response.status(200).json({ url: targetUrl });
