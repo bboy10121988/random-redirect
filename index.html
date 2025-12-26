@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="正在前往驚喜頁面...">
+    <meta property="og:description" content="點擊後將隨機導向不同內容">
+    <title>Redirecting...</title>
+
+    <script type="text/javascript">
+        // 這裡填入你想輪播的網址清單
+        const urls = [
+            "https://wa.me/message/JXF4METTM5LVG1",
+            "https://wa.me/message/YAYM5IU57KQLN1",
+            "https://wa.me/message/PECGZA6JZYQEL1"
+        ];
+
+        function redirect() {
+            // 隨機選一個
+            const winner = urls[Math.floor(Math.random() * urls.length)];
+
+            // 使用 replace 而不是 assign，這樣使用者按「上一頁」不會卡在迴圈裡
+            window.location.replace(winner);
+        }
+
+        // 盡快執行
+        redirect();
+    </script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .loader {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader">
+        <p>正在為您挑選目的地，請稍候...</p>
+    </div>
+</body>
+
+</html>
