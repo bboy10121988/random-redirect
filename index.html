@@ -9,19 +9,12 @@
     <title>Redirecting...</title>
 
     <script type="text/javascript">
-        // 這裡填入你想輪播的網址清單
-        const urls = [
-            "https://wa.me/message/JXF4METTM5LVG1",
-            "https://wa.me/message/YAYM5IU57KQLN1",
-            "https://wa.me/message/PECGZA6JZYQEL1"
-        ];
+        //Google Apps Script 嚴格輪播網址
+        const targetUrl = "https://script.google.com/macros/s/AKfycbx2xI1aiUxaeEZTSq87CTYnLyQAH3PCiJDdH1Sf4jjvG7GIEvO0KzgAU9SMtwrMVZClnA/exec";
 
         function redirect() {
-            // 隨機選一個
-            const winner = urls[Math.floor(Math.random() * urls.length)];
-
-            // 使用 replace 而不是 assign，這樣使用者按「上一頁」不會卡在迴圈裡
-            window.location.replace(winner);
+            // 直接導向到 Google Apps Script，由它來決定要去哪個 WhatsApp 連結
+            window.location.replace(targetUrl);
         }
 
         // 盡快執行
@@ -42,7 +35,6 @@
 
         .loader {
             text-align: center;
-            font-size: 1.2rem;
         }
     </style>
 </head>
