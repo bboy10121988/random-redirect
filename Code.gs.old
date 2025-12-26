@@ -9,27 +9,33 @@ function doGet() {
   // 2. 獲取腳本屬性 (這是一個簡單的資料庫，用來儲存目前的計數)
   var scriptProperties = PropertiesService.getScriptProperties();
   
-  // 3. 讀取目前的 index，如果沒有則預設為 0
-  var currentIndex = parseInt(scriptProperties.getProperty('URL_INDEX'));
-  if (isNaN(currentIndex)) {
-    currentIndex = 0;
-  }
-
-  // 4. 取得這次要跳轉的網址
-  var targetUrl = urls[currentIndex];
-
-  // 5. 計算下一次的 index (如果超過陣列長度就回到 0)
-  var nextIndex = (currentIndex + 1) % urls.length;
+  // 2. 獲取腳本屬性
+  var scriptProperties = PropertiesService.getScriptProperties();
+  var targetUrl = "";
   
-  // 6. 儲存新的 index 供下一位使用者使用
-  // 使用 LockService 防止多人同時點擊時數字重複
+  // 3. 使用 LockService 確保原子性操作 (Atomic Operation)
+  // 必須在讀取 index 之前就上鎖，防止兩人同時讀到舊的 index
   var lock = LockService.getScriptLock();
   try {
     lock.waitLock(10000); // 等待最多 10 秒
+    
+    // --> 在鎖內讀取
+    var currentIndex = parseInt(scriptProperties.getProperty('URL_INDEX'));
+    if (isNaN(currentIndex)) {
+      currentIndex = 0;
+    }
+    
+    // --> 決定網址
+    targetUrl = urls[currentIndex];
+    
+    // --> 計算並儲存下一個
+    var nextIndex = (currentIndex + 1) % urls.length;
     scriptProperties.setProperty('URL_INDEX', nextIndex.toString());
+    
   } catch (e) {
-    // 如果鎖定失敗，也沒關係，只是順序可能稍微亂一次
     Logger.log('Could not obtain lock to update index.');
+    // 萬一上鎖失敗，隨機選一個當作備案
+    targetUrl = urls[Math.floor(Math.random() * urls.length)];
   } finally {
     lock.releaseLock();
   }

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="正在前往驚喜頁面...">
+    <meta property="og:description" content="點擊後將隨機導向不同內容">
+    <title>Redirecting...</title>
+
+    <script type="text/javascript">
+        async function redirect() {
+            try {
+                // 呼叫我們自己的 Vercel API
+                const response = await fetch('/api/redirect');
+                const data = await response.json();
+
+                if (data.url) {
+                    window.location.replace(data.url);
+                } else {
+                    throw new Error("No URL returned");
+                }
+            } catch (e) {
+                console.error("API failed, falling back to random", e);
+                // 萬一 API 掛掉，前端還是有備案 (隨機)
+                const fallbackUrls = [
+                    "https://wa.me/message/JXF4METTM5LVG1",
+                    "https://wa.me/message/YAYM5IU57KQLN1",
+                    "https://wa.me/message/PECGZA6JZYQEL1"
+                ];
+                window.location.replace(fallbackUrls[Math.floor(Math.random() * fallbackUrls.length)]);
+            }
+        }
+
+        // 盡快執行
+        redirect();
+    </script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .loader {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader">
+        <p>正在為您挑選目的地，請稍候...</p>
+    </div>
+</body>
+
+</html>

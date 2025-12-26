@@ -1,0 +1,8 @@
+{
+    "name": "random-redirect",
+    "version": "1.0.0",
+    "description": "WhatsApp Strict Round Robin Redirect",
+    "dependencies": {
+        "@vercel/kv": "^1.0.1"
+    }
+}
