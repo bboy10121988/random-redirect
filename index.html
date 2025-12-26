@@ -17,8 +17,11 @@
         ];
 
         function redirect() {
-            // 隨機選一個
-            const winner = urls[Math.floor(Math.random() * urls.length)];
+            // "偽"輪播：利用當前的時間戳記 (秒數) 來決定
+            // 這樣雖然沒有資料庫，但隨著時間過去，流量會均勻分配給這三個連結
+            // 每一秒換一個，順序固定：1 -> 2 -> 3 -> 1 ...
+            const index = Math.floor(Date.now() / 1000) % urls.length;
+            const winner = urls[index];
 
             // 使用 replace 而不是 assign，這樣使用者按「上一頁」不會卡在迴圈裡
             window.location.replace(winner);
